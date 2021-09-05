@@ -10,6 +10,10 @@ class StartAuthorizationState extends AuthorizationState{
   StartAuthorizationState(bool visiblePassword) : super(visiblePassword);
 }
 
+class LoadingAuthorizationState extends AuthorizationState{
+  LoadingAuthorizationState(bool visiblePassword) : super(visiblePassword);
+}
+
 class DoneAuthorizationState extends AuthorizationState{
   DoneAuthorizationState(bool visiblePassword) : super(visiblePassword);
 }
@@ -20,13 +24,12 @@ class FailAuthorizationState extends AuthorizationState{
 
 
 class AuthorizationCubit extends Cubit<AuthorizationState>{
-  AuthorizationCubit._privateConstructor()  : super(StartAuthorizationState(false));
-  static final AuthorizationCubit _instance = AuthorizationCubit._privateConstructor();
-  static AuthorizationCubit get instance => _instance;
 
-  final UserUseCase _userUseCase = UserUseCase.instance;
+  final UserUseCase _userUseCase;
+  AuthorizationCubit(this._userUseCase) : super(StartAuthorizationState(false));
 
   Future<void> logIn(String email, String password) async{
+    emit(LoadingAuthorizationState(state.visiblePassword));
     User? user = await _userUseCase.authUser(email, password);
     if(user != null){
       emit(DoneAuthorizationState(state.visiblePassword));

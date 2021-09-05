@@ -1,13 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:task_manager/data/dto/user_auth.dart';
-import 'package:task_manager/task_manager.dart';
 
 class AuthService{
-  AuthService._privateConstructor(){
-    _fAuth.app = TaskManager.instance.app!;
-  }
-  static final AuthService _instance = AuthService._privateConstructor();
-  static AuthService get instance => _instance;
 
   final FirebaseAuth _fAuth =  FirebaseAuth.instance;
   User? _user;

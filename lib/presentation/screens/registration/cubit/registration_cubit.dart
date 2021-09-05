@@ -6,10 +6,8 @@ enum RegistrationState{start, done, error}
 
 class RegistrationCubit extends Cubit<RegistrationState>{
 
-  RegistrationCubit._privateConstructor()  : super(RegistrationState.start);
-  static final RegistrationCubit _instance = RegistrationCubit._privateConstructor();
-  static RegistrationCubit get instance => _instance;
-  final UserRepository _userRepository = UserRepository.instance;
+  RegistrationCubit(this._userRepository) : super(RegistrationState.start);
+  final UserRepository _userRepository;
 
   Future<void> registration({required String name, required String surname, required String email,
     required String password}) async{

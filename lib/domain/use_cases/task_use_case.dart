@@ -3,11 +3,8 @@ import 'package:task_manager/domain/entities/task.dart';
 
 class TaskUseCase{
 
-  TaskUseCase._privateConstructor();
-  static final TaskUseCase _instance = TaskUseCase._privateConstructor();
-  static TaskUseCase get instance => _instance;
-
-  final TaskRepository _taskRepository = TaskRepository.instance;
+  TaskUseCase(this._taskRepository);
+  final TaskRepository _taskRepository;
 
   Future<List<Task>> getTaskList() async{
     List<Task> _taskList =  await _taskRepository.getTaskList();

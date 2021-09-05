@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/data/repositories/task_rep.dart';
 import 'package:task_manager/data/repositories/user_rep.dart';
+import 'package:task_manager/domain/entities/full_task.dart';
 import 'package:task_manager/domain/entities/task.dart';
 import 'package:task_manager/domain/entities/user.dart';
 
@@ -13,6 +14,10 @@ class StartState extends TaskState{
   StartState(Status status) : super(status);
 }
 
+class LoadingState extends TaskState{
+  LoadingState(Status status) : super(status);
+}
+
 class DoneState extends TaskState{
   DoneState(Status status) : super(status);
 }
@@ -22,16 +27,15 @@ class FailState extends TaskState{
 }
 
 class TaskCubit extends Cubit<TaskState>{
-  TaskCubit._privateConstructor() : super(StartState(Status.ToDo));
-  static final TaskCubit _instance = TaskCubit._privateConstructor();
-  static TaskCubit get instance => _instance;
+  TaskRepository _taskRepository;
+  UserRepository _userRepository;
 
-  TaskRepository _taskRepository = TaskRepository.instance;
-  UserRepository _userRepository = UserRepository.instance;
+  FullTask? fullTask;
 
-  TaskCubit() : super(StartState(Status.ToDo));
+  TaskCubit(this._taskRepository, this._userRepository, this.fullTask) : super(StartState(Status.ToDo));
 
-  void createTask(String name, String description) async{
+  Future<void> createTask(String name, String description) async{
+    emit(LoadingState(state.status));
     User? user = await _userRepository.getCurrentUser();
     if(user != null){
       Task newTask = Task.newTask(name: name, description: description, status: state.status, idAuthor: user.getId);
@@ -52,6 +56,7 @@ class TaskCubit extends Cubit<TaskState>{
   }
 
   Future<void> updateTask(String id, String name, String description) async{
+    emit(LoadingState(state.status));
     User? user = await _userRepository.getCurrentUser();
     if(user != null){
       Task task = Task(id: id, name: name, description: description, idAuthor: user.getId, status: state.status);

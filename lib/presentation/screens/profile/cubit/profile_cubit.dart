@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:task_manager/domain/entities/user.dart';
 import 'package:task_manager/domain/use_cases/user_use_case.dart';
 
@@ -17,23 +14,25 @@ class UploadedProfileState extends ProfileState{
   UploadedProfileState(User user) : super(user);
 }
 
+class ErrorProfileState extends ProfileState{
+  ErrorProfileState() : super(User(id: '', name: '', surname: '', email: ''));
+}
+
 class ProfileCubit extends Cubit<ProfileState>{
-  ProfileCubit._privateConstructor()  : super(StartProfileState(User(id: '', name: '', surname: '', email: '')));
-  static final ProfileCubit _instance = ProfileCubit._privateConstructor();
-  static ProfileCubit get instance => _instance;
-  final UserUseCase _userUseCase = UserUseCase.instance;
+  ProfileCubit(this._userUseCase)  : super(StartProfileState(User(id: '', name: '', surname: '', email: '')));
+
+  final UserUseCase _userUseCase;
 
   Future<void> initUser() async{
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    final String? userStr = sharedPreferences.getString('user');
-    if(userStr != null){
-      Map<String, dynamic> userMap = jsonDecode(userStr) as Map<String, dynamic>;
-      final User user = User.fromJson(userMap);
+    final User? user = await _userUseCase.getCurrentUser();
+    if(user != null)
       emit(UploadedProfileState(user));
-    }
+    else
+      emit(ErrorProfileState());
   }
 
   void updateNameAndSurname(User user) async{
+    await _userUseCase.saveCurrentUser(user);
     _userUseCase.updateUser(user);
     emit(UploadedProfileState(user));
   }

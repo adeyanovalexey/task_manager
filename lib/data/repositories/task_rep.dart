@@ -10,16 +10,14 @@ abstract class TaskRepositoryInterface{
 
 class TaskRepository implements TaskRepositoryInterface{
 
-  TaskRepository._privateConstructor() : super();
-  static final TaskRepository _instance = TaskRepository._privateConstructor();
-  static TaskRepository get instance => _instance;
-
   final String _path = 'task';
-  FirebaseDatabaseService _firebaseDatabaseService = FirebaseDatabaseService.instance;
+  FirebaseDatabaseService _firebaseDatabaseService;
+
+  TaskRepository(this._firebaseDatabaseService);
 
   @override
   Future<void> addTask(Task task) async{
-    _firebaseDatabaseService.write(_path, task.toJson(false));
+    await _firebaseDatabaseService.write(_path, task.toJson(false));
   }
 
   @override

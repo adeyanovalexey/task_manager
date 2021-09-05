@@ -2,7 +2,7 @@ class Validator{
 
   static String? validatePassword(String? value) {
     final String pattern =
-        r'^(?=.*?[a-z])(?=.*?[0-9]).{4,}$';
+        r'^(?=.*?[a-zA-Z])(?=.*?[0-9]).{4,}$';
     RegExp regex = new RegExp(pattern);
     print(value);
     if (value == null || value.isEmpty) {
@@ -19,14 +19,14 @@ class Validator{
 
   static String? validateName(String? value) {
     final String pattern =
-        r'^([a-z]).{4,}$';
+        r'^([a-zA-Zа-яА-Я]).{4,}$';
     RegExp regex = new RegExp(pattern);
     print(value);
     if (value == null || value.isEmpty) {
-      return 'Please enter name';
+      return 'Введите имя';
     }
     else if (!regex.hasMatch(value))
-      return 'Enter at least 1 letter and 1 digit';
+      return 'меньше 5 букв';
     else
       return null;
 

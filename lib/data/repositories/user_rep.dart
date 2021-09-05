@@ -18,13 +18,12 @@ abstract class TaskRepositoryInterface{
 }
 
 class UserRepository implements TaskRepositoryInterface{
-  UserRepository._privateConstructor();
-  static final UserRepository _instance = UserRepository._privateConstructor();
-  static UserRepository get instance => _instance;
 
-  FirebaseDatabaseService _firebaseDatabaseService = FirebaseDatabaseService.instance;
-  final AuthService _authService = AuthService.instance;
+  final FirebaseDatabaseService _firebaseDatabaseService;
+  final AuthService _authService;
   final String _path = 'user';
+
+  UserRepository(this._firebaseDatabaseService, this._authService);
 
   Future<User?> authUser(String email, String password) async{
     UserAuth? userAuth = await _authService.signInWithEmailAndPassword(email: email, password: password);

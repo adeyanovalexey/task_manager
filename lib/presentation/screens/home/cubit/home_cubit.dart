@@ -2,8 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/domain/entities/full_task.dart';
 import 'package:task_manager/domain/entities/task.dart';
 import 'package:task_manager/domain/use_cases/full_task_use_case.dart';
-import 'package:task_manager/domain/use_cases/task_use_case.dart';
-import 'package:task_manager/domain/use_cases/user_use_case.dart';
+
 abstract class HomeState{
   final List<FullTask> toDoList;
   final List<FullTask> inProgressList;
@@ -28,12 +27,9 @@ class LoadingErrorState extends HomeState{
 
 class HomeCubit extends Cubit<HomeState>{
 
-  HomeCubit._privateConstructor()  : super(StartHomeState(
+  final FullTaskUseCase _fullTaskUseCase;
+  HomeCubit(this._fullTaskUseCase) : super(StartHomeState(
     toDoList: [], inProgressList: [], testingList: [], doneList: [],));
-  static final HomeCubit _instance = HomeCubit._privateConstructor();
-  static HomeCubit get instance => _instance;
-
-  final FullTaskUseCase _fullTaskUseCase = FullTaskUseCase(UserUseCase.instance, TaskUseCase.instance);
 
   Future<void> downloadData() async{
     await _fullTaskUseCase.requestFullTaskLIst(); // Запрос списка задач с Firebase
