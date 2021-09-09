@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/data/repositories/task_rep.dart';
 import 'package:task_manager/data/repositories/user_rep.dart';
 import 'package:task_manager/domain/entities/full_task.dart';
+import 'package:task_manager/domain/use_cases/task_use_case.dart';
 import 'package:task_manager/domain/use_cases/user_use_case.dart';
 import 'package:task_manager/presentation/screens/app_cubit.dart';
 import 'package:task_manager/presentation/screens/authorization/cubit/authorization_cubit.dart';
@@ -32,7 +33,7 @@ class AppRoutesHelper {
           return BlocProvider<AuthorizationCubit>(
               create: (context) =>
                   AuthorizationCubit(BlocProvider.of<AppCubit>(context).dependencyManager.get<UserUseCase>()),
-              child: Scaffold(body: AuthorizationScreen())
+              child: AuthorizationScreen()
           );
         },
       );
@@ -42,8 +43,8 @@ class AppRoutesHelper {
         builder: (context) {
           return BlocProvider<RegistrationCubit>(
               create: (context) =>
-                  RegistrationCubit(BlocProvider.of<AppCubit>(context).dependencyManager.get<UserRepository>()),
-              child: Scaffold(body: RegistrationScreen())
+                  RegistrationCubit(BlocProvider.of<AppCubit>(context).dependencyManager.get<UserUseCase>()),
+              child: RegistrationScreen()
           );
         },
       );
@@ -54,10 +55,10 @@ class AppRoutesHelper {
         builder: (context) {
           return BlocProvider<TaskCubit>(
               create: (context) =>
-                  TaskCubit(BlocProvider.of<AppCubit>(context).dependencyManager.get<TaskRepository>(),
-                      BlocProvider.of<AppCubit>(context).dependencyManager.get<UserRepository>(),
+                  TaskCubit(BlocProvider.of<AppCubit>(context).dependencyManager.get<TaskUseCase>(),
+                      BlocProvider.of<AppCubit>(context).dependencyManager.get<UserUseCase>(),
                       task),
-              child: Scaffold(body: TaskScreen())
+              child: TaskScreen()
           );
         },
       );
@@ -67,8 +68,8 @@ class AppRoutesHelper {
         settings: routeSettings,
         builder: (context) {
           return BlocProvider<MainCubit>(
-              create: (context) => MainCubit(routeSettings.arguments != null ? routeSettings.arguments as int : null),
-              child: Scaffold(body: MainScreen(),)
+            create: (context) => MainCubit(routeSettings.arguments != null ? routeSettings.arguments as int : null),
+            child: MainScreen(),
           );
         },
       );

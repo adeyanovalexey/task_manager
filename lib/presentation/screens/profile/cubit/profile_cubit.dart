@@ -1,10 +1,13 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/domain/entities/user.dart';
 import 'package:task_manager/domain/use_cases/user_use_case.dart';
 
-abstract class ProfileState{
+abstract class ProfileState extends Equatable{
   ProfileState(this.user);
-  User user;
+  final User user;
+  @override
+  List<Object> get props => [user];
 }
 class StartProfileState extends ProfileState{
   StartProfileState(User user) : super(user);
@@ -23,8 +26,8 @@ class ProfileCubit extends Cubit<ProfileState>{
 
   final UserUseCase _userUseCase;
 
-  Future<void> initUser() async{
-    final User? user = await _userUseCase.getCurrentUser();
+  void initUser() {
+    final User? user = _userUseCase.getUser();
     if(user != null)
       emit(UploadedProfileState(user));
     else
@@ -32,7 +35,6 @@ class ProfileCubit extends Cubit<ProfileState>{
   }
 
   void updateNameAndSurname(User user) async{
-    await _userUseCase.saveCurrentUser(user);
     _userUseCase.updateUser(user);
     emit(UploadedProfileState(user));
   }

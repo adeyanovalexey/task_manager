@@ -17,7 +17,7 @@ class TaskScreen extends StatelessWidget{
 
   final List<String> statusStrList = ['ToDO', 'InProgress', 'Testing', 'Done'];
   static const String ROUTE_NAME = "task_screen";
-
+  final GlobalKey<FormState> _key = GlobalKey<FormState>();
 
   void setTextEditingController(FullTask? task){
     if(task != null){
@@ -33,133 +33,132 @@ class TaskScreen extends StatelessWidget{
     TaskCubit taskCubit = BlocProvider.of<TaskCubit>(context);
     setTextEditingController(taskCubit.fullTask);
     return BlocBuilder<TaskCubit, TaskState>(
-        bloc: taskCubit,
         builder: (context, snapshot){
-          GlobalKey<FormState> _key = GlobalKey<FormState>();
-          return Form(
-              key: _key,
-              child:Container(
-                  color: Theme.of(context).backgroundColor,
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('Привычка', style: Theme.of(context).textTheme.headline2,),
-                      SizedBox(height: MediaQuery.of(context).size.height * 0.02,),
-                      TextFormField(
-                        enabled: taskCubit.fullTask != null ? false : true,
-                        validator: Validator.validateName,
-                        controller: nameEditingController,
-                        style: Theme.of(context).textTheme.headline1,
-                        decoration: new InputDecoration(
-                          disabledBorder: OutlineInputBorder(borderSide: BorderSide(width: 2, color: Colors.white)),
-                          enabledBorder: OutlineInputBorder(borderSide: BorderSide(width: 2, color: Theme.of(context).dividerColor)),
-                          errorBorder: OutlineInputBorder(borderSide: BorderSide(width: 2, color: Colors.red)),
-                          counterStyle: Theme.of(context).textTheme.headline1,
-                          labelStyle: Theme.of(context).textTheme.headline1,
-                          labelText: "Название",
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.red, width: 5.0),
-                          ),),
-                        onChanged: (value){
-
-                        },),
-                      SizedBox(height: 10),
-                      TextFormField(
-                        validator: Validator.validateName,
-                        enabled: taskCubit.fullTask != null ? false : true,
-                        controller: descriptionEditingController,
-                        style: Theme.of(context).textTheme.headline1,
-                        decoration: new InputDecoration(
-                          disabledBorder: OutlineInputBorder(borderSide: BorderSide(width: 2, color: Colors.white)),
-                          enabledBorder: OutlineInputBorder(borderSide: BorderSide(width: 2, color: Theme.of(context).dividerColor)),
-                          errorBorder: OutlineInputBorder(borderSide: BorderSide(width: 2, color: Colors.red)),
-                          counterStyle: Theme.of(context).textTheme.headline1,
-                          labelStyle: Theme.of(context).textTheme.headline1,
-                          labelText: "Описание",
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.red, width: 5.0),
-                          ),),
-                        onChanged: (value){},),
-                      SizedBox(height: 10),
-                      taskCubit.fullTask != null ?
-                      TextField(
-                        enabled: false,
-                        controller: authorEditingController,
-                        style: Theme.of(context).textTheme.headline1,
-                        decoration: new InputDecoration(
-                          disabledBorder: OutlineInputBorder(borderSide: BorderSide(width: 2, color: Colors.white)),
-                          enabledBorder: OutlineInputBorder(borderSide: BorderSide(width: 2, color: Theme.of(context).dividerColor)),
-                          errorBorder: OutlineInputBorder(borderSide: BorderSide(width: 2, color: Colors.red)),
-                          counterStyle: Theme.of(context).textTheme.headline1,
-                          labelStyle: Theme.of(context).textTheme.headline1,
-                          labelText: "Автор",
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.red, width: 5.0),
-                          ),),
-                        onChanged: (value){},) : Container(),
-                      SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text('Статус', style: Theme.of(context).textTheme.headline1,),
-                          SizedBox(width: 10),
-                          DropdownButton<String>(
-                            value: getStrStatus(BlocProvider.of<TaskCubit>(context).state.status),
-                            elevation: 8,
-                            isDense: false,
-                            dropdownColor: Colors.blue,
-                            icon: Icon(Icons.arrow_drop_down, color: Colors.white,),
-                            items: statusStrList.map((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: new Text(value, style: Theme.of(context).textTheme.headline1,),
-                                onTap: (){
-                                  BlocProvider.of<TaskCubit>(context).setStatus(getCurrentStatus(value));
-                                },
-                              );
-                            }).toList(),
-                            onChanged: (_) {},
-                          ),
-                        ],),
-                      SizedBox(height: 10),
-                      Row(
+          return Scaffold(
+              body: Form(
+                  key: _key,
+                  child:Container(
+                      color: Theme.of(context).backgroundColor,
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          ElevatedButton(
-                              child: Text('Отмена',
-                                style: Theme.of(context).textTheme.headline1,
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                  primary: Theme.of(context).buttonColor,
-                                  minimumSize: Size(MediaQuery.of(context).size.width * 0.3, MediaQuery.of(context).size.height * 0.05) // put the width and height you want
-                              ),
-                              onPressed: () => PathManager.goPage(MainScreen.ROUTE_NAME, context)),
-                          SizedBox(width: 20,),
-                          ElevatedButton(
-                            child: Text('Сохранить',
-                              style: Theme.of(context).textTheme.headline1,
-                            ),
-                            style: ElevatedButton.styleFrom(
-                                primary: Theme.of(context).buttonColor,
-                                minimumSize: Size(MediaQuery.of(context).size.width * 0.3, MediaQuery.of(context).size.height * 0.05) // put the width and height you want
-                            ),
-                            onPressed: () async{
-                              if(_key.currentState!.validate() && !(BlocProvider.of<TaskCubit>(context).state is LoadingState)){
-                                if(taskCubit.fullTask != null)
-                                  await BlocProvider.of<TaskCubit>(context).updateTask(
-                                      taskCubit.fullTask!.getId, taskCubit.fullTask!.getName, taskCubit.fullTask!.getDescription);
-                                else
-                                  await BlocProvider.of<TaskCubit>(context).createTask(nameEditingController.text,
-                                      descriptionEditingController.text);
-                                PathManager.goPage(MainScreen.ROUTE_NAME, context);
-                              }
+                          Text('Привычка', style: Theme.of(context).textTheme.headline2,),
+                          SizedBox(height: MediaQuery.of(context).size.height * 0.02,),
+                          TextFormField(
+                            enabled: taskCubit.fullTask != null ? false : true,
+                            validator: Validator.validateName,
+                            controller: nameEditingController,
+                            style: Theme.of(context).textTheme.headline1,
+                            decoration: new InputDecoration(
+                              disabledBorder: OutlineInputBorder(borderSide: BorderSide(width: 2, color: Colors.white)),
+                              enabledBorder: OutlineInputBorder(borderSide: BorderSide(width: 2, color: Theme.of(context).dividerColor)),
+                              errorBorder: OutlineInputBorder(borderSide: BorderSide(width: 2, color: Colors.red)),
+                              counterStyle: Theme.of(context).textTheme.headline1,
+                              labelStyle: Theme.of(context).textTheme.headline1,
+                              labelText: "Название",
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.red, width: 5.0),
+                              ),),
+                            onChanged: (value){
+
                             },),
-                        ],)
-                    ],
-                  )
-              ));
+                          SizedBox(height: 10),
+                          TextFormField(
+                            validator: Validator.validateName,
+                            enabled: taskCubit.fullTask != null ? false : true,
+                            controller: descriptionEditingController,
+                            style: Theme.of(context).textTheme.headline1,
+                            decoration: new InputDecoration(
+                              disabledBorder: OutlineInputBorder(borderSide: BorderSide(width: 2, color: Colors.white)),
+                              enabledBorder: OutlineInputBorder(borderSide: BorderSide(width: 2, color: Theme.of(context).dividerColor)),
+                              errorBorder: OutlineInputBorder(borderSide: BorderSide(width: 2, color: Colors.red)),
+                              counterStyle: Theme.of(context).textTheme.headline1,
+                              labelStyle: Theme.of(context).textTheme.headline1,
+                              labelText: "Описание",
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.red, width: 5.0),
+                              ),),
+                            onChanged: (value){},),
+                          SizedBox(height: 10),
+                          taskCubit.fullTask != null ?
+                          TextField(
+                            enabled: false,
+                            controller: authorEditingController,
+                            style: Theme.of(context).textTheme.headline1,
+                            decoration: new InputDecoration(
+                              disabledBorder: OutlineInputBorder(borderSide: BorderSide(width: 2, color: Colors.white)),
+                              enabledBorder: OutlineInputBorder(borderSide: BorderSide(width: 2, color: Theme.of(context).dividerColor)),
+                              errorBorder: OutlineInputBorder(borderSide: BorderSide(width: 2, color: Colors.red)),
+                              counterStyle: Theme.of(context).textTheme.headline1,
+                              labelStyle: Theme.of(context).textTheme.headline1,
+                              labelText: "Автор",
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.red, width: 5.0),
+                              ),),
+                            onChanged: (value){},) : Container(),
+                          SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Text('Статус', style: Theme.of(context).textTheme.headline1,),
+                              SizedBox(width: 10),
+                              DropdownButton<String>(
+                                value: getStrStatus(BlocProvider.of<TaskCubit>(context).state.status),
+                                elevation: 8,
+                                isDense: false,
+                                dropdownColor: Colors.blue,
+                                icon: Icon(Icons.arrow_drop_down, color: Colors.white,),
+                                items: statusStrList.map((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: new Text(value, style: Theme.of(context).textTheme.headline1,),
+                                    onTap: (){
+                                      BlocProvider.of<TaskCubit>(context).setStatus(getCurrentStatus(value));
+                                    },
+                                  );
+                                }).toList(),
+                                onChanged: (_) {},
+                              ),
+                            ],),
+                          SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ElevatedButton(
+                                  child: Text('Отмена',
+                                    style: Theme.of(context).textTheme.headline1,
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                      primary: Theme.of(context).buttonColor,
+                                      minimumSize: Size(MediaQuery.of(context).size.width * 0.3, MediaQuery.of(context).size.height * 0.05) // put the width and height you want
+                                  ),
+                                  onPressed: () => PathManager.goPage(MainScreen.ROUTE_NAME, context)),
+                              SizedBox(width: 20,),
+                              ElevatedButton(
+                                child: Text('Сохранить',
+                                  style: Theme.of(context).textTheme.headline1,
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                    primary: Theme.of(context).buttonColor,
+                                    minimumSize: Size(MediaQuery.of(context).size.width * 0.3, MediaQuery.of(context).size.height * 0.05) // put the width and height you want
+                                ),
+                                onPressed: () async{
+                                  if(_key.currentState!.validate() && !(BlocProvider.of<TaskCubit>(context).state is LoadingState)){
+                                    if(taskCubit.fullTask != null)
+                                      await BlocProvider.of<TaskCubit>(context).updateTask(
+                                          taskCubit.fullTask!.getId, taskCubit.fullTask!.getName, taskCubit.fullTask!.getDescription);
+                                    else
+                                      await BlocProvider.of<TaskCubit>(context).createTask(nameEditingController.text,
+                                          descriptionEditingController.text);
+                                    PathManager.goPage(MainScreen.ROUTE_NAME, context);
+                                  }
+                                },),
+                            ],)
+                        ],
+                      )
+                  )));
         });}
 
   Status getCurrentStatus(String value){

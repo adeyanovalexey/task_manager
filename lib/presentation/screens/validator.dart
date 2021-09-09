@@ -19,14 +19,14 @@ class Validator{
 
   static String? validateName(String? value) {
     final String pattern =
-        r'^([a-zA-Zа-яА-Я]).{4,}$';
+        r'^([a-zA-Zа-яА-Я]).{2,}$';
     RegExp regex = new RegExp(pattern);
     print(value);
     if (value == null || value.isEmpty) {
       return 'Введите имя';
     }
     else if (!regex.hasMatch(value))
-      return 'меньше 5 букв';
+      return 'меньше 3 букв';
     else
       return null;
 

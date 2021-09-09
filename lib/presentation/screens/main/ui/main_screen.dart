@@ -19,7 +19,7 @@ class MainScreen extends  StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MainCubit, MainCubitState>(
-        bloc: BlocProvider.of<MainCubit>(context),
+      //bloc: BlocProvider.of<MainCubit>(context),
         builder: (context, state) {
           return getScaffold(context, state);
         });
@@ -31,18 +31,11 @@ class MainScreen extends  StatelessWidget{
           length: 4,
           child: BlocProvider<HomeCubit>(create: (context) =>
               HomeCubit(BlocProvider.of<AppCubit>(context).dependencyManager.get<FullTaskUseCase>()),
-              child: Scaffold(body: HomeScreen(),
-                bottomNavigationBar: NavigationWidget(),
-                appBar: AppBar(
-                  backgroundColor: Theme.of(context).cardColor,
-                  bottom: getHomeTabBar(context),
-                ),
-              )));
+              child: HomeScreen()));
     else if(state.tabIndex == 1)
       return BlocProvider<ProfileCubit>(create: (context) =>
           ProfileCubit(BlocProvider.of<AppCubit>(context).dependencyManager.get<UserUseCase>()),
-          child: Scaffold(body: ProfileScreen(),
-              bottomNavigationBar: NavigationWidget()));
+          child: ProfileScreen());
     else
       return Scaffold(
         body: Container(),
@@ -53,49 +46,6 @@ class MainScreen extends  StatelessWidget{
         ),
         bottomNavigationBar: NavigationWidget(),
       );
-  }
-
-  TabBar getHomeTabBar(BuildContext context){
-    return TabBar(
-      tabs: <Widget>[
-        Container(width: MediaQuery.of(context).size.width * 0.17,
-            child: Tab(
-                child: FittedBox(child: Text(
-                    'To Do',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15
-                    )))
-            )),
-        Container(width: MediaQuery.of(context).size.width * 0.17,
-          child: Tab(
-            child:FittedBox(child: Text(
-                'In Progress',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 15
-                )),),
-          ),),
-        Container(width: MediaQuery.of(context).size.width * 0.17,
-          child:Tab(
-              child: FittedBox(child: Text(
-                  'Testing',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 15
-                  )))
-          ),),
-        Container(width: MediaQuery.of(context).size.width * 0.17,
-            child:Tab(
-                child: FittedBox(child: Text(
-                    'Done',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15
-                    )))
-            ))
-      ],
-    );
   }
 
   FullTask? getTaskFromArgument(String? arg){

@@ -1,12 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:task_manager/data/services/firebase_db_service.dart';
 import 'package:task_manager/domain/entities/task.dart';
-
-abstract class TaskRepositoryInterface{
-  Future<List<Task>> getTaskList();
-  void addTask(Task task);
-  Future<void> updateTask(Task task);
-}
+import 'package:task_manager/domain/interfaces/task_repository_interface.dart';
 
 class TaskRepository implements TaskRepositoryInterface{
 

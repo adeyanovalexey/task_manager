@@ -16,7 +16,7 @@ class FullTaskUseCase {
     _fullTaskList.clear();
     List<Task> taskList = await _taskUseCase.getTaskList();
     for(Task task in taskList){
-      User? user = await _userUseCase.getUser(task.getIdAuthor);
+      User? user = await _userUseCase.getUserById(task.getIdAuthor);
       String nameAuthor = user != null ? user.getName + " " +
           user.getSurname : "Нет данных";
       FullTask fullTask = FullTask(id: task.getId,
@@ -39,7 +39,7 @@ class FullTaskUseCase {
   }
 
   Future<FullTask?> addTask({required name, required description, required idAuthor}) async {
-    User? user = await _userUseCase.getUser(idAuthor);
+    User? user = await _userUseCase.getUserById(idAuthor);
     if(user != null){
       Task task = await _taskUseCase.addTask(name: name, description: description, idAuthor: idAuthor);
       FullTask fullTask = FullTask(id: task.getId, name: task.getName, description: task.getDescription,

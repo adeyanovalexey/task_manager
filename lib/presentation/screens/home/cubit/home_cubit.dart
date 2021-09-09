@@ -1,14 +1,45 @@
+import 'package:collection/collection.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/domain/entities/full_task.dart';
 import 'package:task_manager/domain/entities/task.dart';
 import 'package:task_manager/domain/use_cases/full_task_use_case.dart';
 
 abstract class HomeState{
+    //extends Equatable{
   final List<FullTask> toDoList;
   final List<FullTask> inProgressList;
   final List<FullTask> testingList;
   final List<FullTask> doneList;
   HomeState({required this.toDoList, required this.inProgressList, required this.testingList, required this.doneList});
+
+  @override
+  bool operator ==(Object other) {
+    if(other is HomeState){
+      HomeState homeState = other;
+      print(homeState.toDoList.toString());
+      print(homeState.inProgressList.toString());
+      print(homeState.testingList.toString());
+      print(homeState.doneList.toString());
+
+      Function deepEq = const DeepCollectionEquality().equals;
+      if(deepEq(toDoList, homeState.toDoList)){
+        return true;
+      }
+
+
+      // if(deepEq(toDoList, homeState.toDoList) && deepEq(inProgressList, homeState.inProgressList)
+      // && deepEq(testingList, homeState.testingList) && deepEq(doneList, homeState.doneList))
+      //   return true;
+    }
+    return false;
+  }
+  @override
+  int get hashCode => super.hashCode;
+  // @override
+  // List<Object> get props => [toDoList, inProgressList, testingList, doneList];
+
+
 }
 
 class StartHomeState extends HomeState{

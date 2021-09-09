@@ -1,10 +1,10 @@
-import 'package:task_manager/data/repositories/task_rep.dart';
 import 'package:task_manager/domain/entities/task.dart';
+import 'package:task_manager/domain/interfaces/task_repository_interface.dart';
 
 class TaskUseCase{
 
   TaskUseCase(this._taskRepository);
-  final TaskRepository _taskRepository;
+  final TaskRepositoryInterface _taskRepository;
 
   Future<List<Task>> getTaskList() async{
     List<Task> _taskList =  await _taskRepository.getTaskList();
@@ -16,5 +16,9 @@ class TaskUseCase{
         status: Status.ToDo);
     await _taskRepository.addTask(newTask);
     return newTask;
+  }
+
+  Future<void> updateTask(Task task) async {
+    await _taskRepository.updateTask(task);
   }
 }

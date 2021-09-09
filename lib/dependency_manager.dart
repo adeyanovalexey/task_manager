@@ -4,6 +4,8 @@ import 'package:task_manager/data/repositories/task_rep.dart';
 import 'package:task_manager/data/repositories/user_rep.dart';
 import 'package:task_manager/data/services/auth_service.dart';
 import 'package:task_manager/data/services/firebase_db_service.dart';
+import 'package:task_manager/domain/interfaces/task_repository_interface.dart';
+import 'package:task_manager/domain/interfaces/user_repository_interface.dart';
 import 'package:task_manager/domain/use_cases/full_task_use_case.dart';
 import 'package:task_manager/domain/use_cases/task_use_case.dart';
 import 'package:task_manager/domain/use_cases/user_use_case.dart';
@@ -25,11 +27,11 @@ class DependencyManager{
   }
 
   void _registerRepositories() {
-    _injector.registerSingleton<TaskRepository>((){
+    _injector.registerSingleton<TaskRepositoryInterface>((){
       FirebaseDatabaseService firebaseDatabaseService = _injector.get<FirebaseDatabaseService>();
       return TaskRepository(firebaseDatabaseService);
     });
-    _injector.registerSingleton<UserRepository>((){
+    _injector.registerSingleton<UserRepositoryInterface>((){
       FirebaseDatabaseService firebaseDatabaseService = _injector.get<FirebaseDatabaseService>();
       AuthService authService = _injector.get<AuthService>();
       return UserRepository(firebaseDatabaseService, authService);
@@ -38,12 +40,12 @@ class DependencyManager{
 
   void _registerUseCase(){
     _injector.registerSingleton<UserUseCase>((){
-      UserRepository userRepository = _injector.get<UserRepository>();
+      UserRepositoryInterface userRepository = _injector.get<UserRepositoryInterface>();
       return UserUseCase(userRepository);
     });
 
     _injector.registerSingleton<TaskUseCase>((){
-      TaskRepository taskRepository = _injector.get<TaskRepository>();
+      TaskRepositoryInterface taskRepository = _injector.get<TaskRepositoryInterface>();
       return TaskUseCase(taskRepository);
     });
 
@@ -52,8 +54,5 @@ class DependencyManager{
       TaskUseCase taskUseCase = _injector.get<TaskUseCase>();
       return FullTaskUseCase(userUseCase, taskUseCase);
     });
-
-
-
   }
 }

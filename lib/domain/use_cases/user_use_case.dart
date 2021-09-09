@@ -1,25 +1,21 @@
-import 'package:task_manager/data/repositories/user_rep.dart';
 import 'package:task_manager/domain/entities/user.dart';
+import 'package:task_manager/domain/interfaces/user_repository_interface.dart';
 
 class UserUseCase{
 
   UserUseCase(this._userRepository);
-  final UserRepository _userRepository;
+  final UserRepositoryInterface _userRepository;
 
   Future<User?> authUser(String email, String password) async{
     return await _userRepository.authUser(email, password);
   }
 
-  Future<User?> getUser(String id) async{
-    return await _userRepository.getUser(id);
+  Future<User?> getUserById(String id) async{
+    return await _userRepository.getUserById(id);
   }
 
-  Future<User?> getCurrentUser() async{
-    return await _userRepository.getCurrentUser();
-  }
-
-  Future<void> saveCurrentUser(User user) async{
-    await _userRepository.saveCurrentUser(user);
+  User? getUser(){
+    return _userRepository.getUser();
   }
 
   void updateUser(User user) async{
@@ -28,5 +24,9 @@ class UserUseCase{
 
   void updatePasswordUser(String password){
     _userRepository.updatePasswordUser(password);
+  }
+
+  Future<bool> registrationUser(RegistrationUser registrationUser) async{
+    return await _userRepository.registrationUser(registrationUser);
   }
 }
