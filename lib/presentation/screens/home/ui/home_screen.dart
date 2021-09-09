@@ -38,7 +38,7 @@ class HomeScreen extends StatelessWidget{
               ),
             );
           else
-            return Center(child: CircularProgressIndicator());
+            return Scaffold(body: Center(child: CircularProgressIndicator()));
         }
     );
   }

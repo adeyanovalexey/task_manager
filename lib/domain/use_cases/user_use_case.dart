@@ -1,7 +1,8 @@
 import 'package:task_manager/domain/entities/user.dart';
-import 'package:task_manager/domain/interfaces/user_repository_interface.dart';
+import 'package:task_manager/domain/interfaces/repository/user_repository_interface.dart';
+import 'package:task_manager/domain/interfaces/usecase/user_use_case_interface.dart';
 
-class UserUseCase{
+class UserUseCase implements UserUseCaseInterface{
 
   UserUseCase(this._userRepository);
   final UserRepositoryInterface _userRepository;

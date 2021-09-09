@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/domain/entities/user.dart';
+import 'package:task_manager/domain/interfaces/usecase/user_use_case_interface.dart';
 import 'package:task_manager/domain/use_cases/user_use_case.dart';
 
 abstract class ProfileState extends Equatable{
@@ -22,12 +23,12 @@ class ErrorProfileState extends ProfileState{
 }
 
 class ProfileCubit extends Cubit<ProfileState>{
-  ProfileCubit(this._userUseCase)  : super(StartProfileState(User(id: '', name: '', surname: '', email: '')));
+  ProfileCubit(this._userUseCaseInterface)  : super(StartProfileState(User(id: '', name: '', surname: '', email: '')));
 
-  final UserUseCase _userUseCase;
+  final UserUseCaseInterface _userUseCaseInterface;
 
   void initUser() {
-    final User? user = _userUseCase.getUser();
+    final User? user = _userUseCaseInterface.getUser();
     if(user != null)
       emit(UploadedProfileState(user));
     else
@@ -35,12 +36,12 @@ class ProfileCubit extends Cubit<ProfileState>{
   }
 
   void updateNameAndSurname(User user) async{
-    _userUseCase.updateUser(user);
+    _userUseCaseInterface.updateUser(user);
     emit(UploadedProfileState(user));
   }
 
   void updatePassword(String password){
-    _userUseCase.updatePasswordUser(password);
+    _userUseCaseInterface.updatePasswordUser(password);
     emit(UploadedProfileState(state.user));
   }
 }

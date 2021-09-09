@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/data/repositories/task_rep.dart';
 import 'package:task_manager/data/repositories/user_rep.dart';
 import 'package:task_manager/domain/entities/full_task.dart';
+import 'package:task_manager/domain/interfaces/usecase/task_use_case_interface.dart';
+import 'package:task_manager/domain/interfaces/usecase/user_use_case_interface.dart';
 import 'package:task_manager/domain/use_cases/task_use_case.dart';
 import 'package:task_manager/domain/use_cases/user_use_case.dart';
 import 'package:task_manager/presentation/screens/app_cubit.dart';
@@ -32,7 +34,7 @@ class AppRoutesHelper {
         builder: (context) {
           return BlocProvider<AuthorizationCubit>(
               create: (context) =>
-                  AuthorizationCubit(BlocProvider.of<AppCubit>(context).dependencyManager.get<UserUseCase>()),
+                  AuthorizationCubit(BlocProvider.of<AppCubit>(context).dependencyManager.get<UserUseCaseInterface>()),
               child: AuthorizationScreen()
           );
         },
@@ -43,7 +45,7 @@ class AppRoutesHelper {
         builder: (context) {
           return BlocProvider<RegistrationCubit>(
               create: (context) =>
-                  RegistrationCubit(BlocProvider.of<AppCubit>(context).dependencyManager.get<UserUseCase>()),
+                  RegistrationCubit(BlocProvider.of<AppCubit>(context).dependencyManager.get<UserUseCaseInterface>()),
               child: RegistrationScreen()
           );
         },
@@ -55,8 +57,8 @@ class AppRoutesHelper {
         builder: (context) {
           return BlocProvider<TaskCubit>(
               create: (context) =>
-                  TaskCubit(BlocProvider.of<AppCubit>(context).dependencyManager.get<TaskUseCase>(),
-                      BlocProvider.of<AppCubit>(context).dependencyManager.get<UserUseCase>(),
+                  TaskCubit(BlocProvider.of<AppCubit>(context).dependencyManager.get<TaskUseCaseInterface>(),
+                      BlocProvider.of<AppCubit>(context).dependencyManager.get<UserUseCaseInterface>(),
                       task),
               child: TaskScreen()
           );

@@ -3,7 +3,7 @@ import 'package:task_manager/data/dto/user_dto.dart';
 import 'package:task_manager/data/services/auth_service.dart';
 import 'package:task_manager/data/services/firebase_db_service.dart';
 import 'package:task_manager/domain/entities/user.dart';
-import 'package:task_manager/domain/interfaces/user_repository_interface.dart';
+import 'package:task_manager/domain/interfaces/repository/user_repository_interface.dart';
 
 class UserRepository implements UserRepositoryInterface{
 
@@ -55,7 +55,7 @@ class UserRepository implements UserRepositoryInterface{
     if(userAuth != null){
       UserDTO userDTO = UserDTO(userAuth.id, registrationUser.getName, registrationUser.getSurname);
       await _firebaseDatabaseService.write(_path, userDTO.toJson(), userAuth.id);
-      _user = await getUserById(userAuth.id);
+      _user = User(id: userAuth.id, name: userDTO.getName, surname: userDTO.getSurname, email: userAuth.email);
       return true;
     }
     return false;

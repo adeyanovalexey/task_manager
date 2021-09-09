@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/domain/entities/user.dart';
+import 'package:task_manager/domain/interfaces/usecase/user_use_case_interface.dart';
 import 'package:task_manager/domain/use_cases/user_use_case.dart';
 
 abstract class AuthorizationState extends Equatable{
@@ -29,12 +30,12 @@ class FailAuthorizationState extends AuthorizationState{
 
 class AuthorizationCubit extends Cubit<AuthorizationState>{
 
-  final UserUseCase _userUseCase;
-  AuthorizationCubit(this._userUseCase) : super(StartAuthorizationState(false));
+  final UserUseCaseInterface _userUseCaseInterface;
+  AuthorizationCubit(this._userUseCaseInterface) : super(StartAuthorizationState(false));
 
   Future<void> logIn(String email, String password) async{
     emit(LoadingAuthorizationState(state.visiblePassword));
-    User? user = await _userUseCase.authUser(email, password);
+    User? user = await _userUseCaseInterface.authUser(email, password);
     if(user != null)
       emit(DoneAuthorizationState(state.visiblePassword));
     else

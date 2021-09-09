@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/domain/entities/full_task.dart';
 import 'package:task_manager/domain/entities/task.dart';
+import 'package:task_manager/domain/interfaces/usecase/full_task_use_case_interface.dart';
 import 'package:task_manager/domain/use_cases/full_task_use_case.dart';
 
 abstract class HomeState{
@@ -58,23 +59,23 @@ class LoadingErrorState extends HomeState{
 
 class HomeCubit extends Cubit<HomeState>{
 
-  final FullTaskUseCase _fullTaskUseCase;
-  HomeCubit(this._fullTaskUseCase) : super(StartHomeState(
+  final FullTaskUseCaseInterface _fullTaskUseCaseInterface;
+  HomeCubit(this._fullTaskUseCaseInterface) : super(StartHomeState(
     toDoList: [], inProgressList: [], testingList: [], doneList: [],));
 
   Future<void> downloadData() async{
-    await _fullTaskUseCase.requestFullTaskLIst(); // Запрос списка задач с Firebase
-    List<FullTask> toDoList = _fullTaskUseCase.getFullTaskList(Status.ToDo);
-    List<FullTask> inProgressList = _fullTaskUseCase.getFullTaskList(Status.InProgress);
-    List<FullTask> testingList = _fullTaskUseCase.getFullTaskList(Status.Testing);
-    List<FullTask> doneList = _fullTaskUseCase.getFullTaskList(Status.Done);
+    await _fullTaskUseCaseInterface.requestFullTaskLIst(); // Запрос списка задач с Firebase
+    List<FullTask> toDoList = _fullTaskUseCaseInterface.getFullTaskList(Status.ToDo);
+    List<FullTask> inProgressList = _fullTaskUseCaseInterface.getFullTaskList(Status.InProgress);
+    List<FullTask> testingList = _fullTaskUseCaseInterface.getFullTaskList(Status.Testing);
+    List<FullTask> doneList = _fullTaskUseCaseInterface.getFullTaskList(Status.Done);
 
     emit(DataUploadedState(
         toDoList: toDoList, inProgressList: inProgressList, testingList: testingList, doneList: doneList));
   }
 
   Future<void> addTask({required String name, required String description, required String idAuthor}) async{
-    FullTask? newTask = await _fullTaskUseCase.addTask(name: name, description: description, idAuthor: idAuthor);
+    FullTask? newTask = await _fullTaskUseCaseInterface.addTask(name: name, description: description, idAuthor: idAuthor);
     List<FullTask> newToDoList = state.toDoList;
 
     if(newTask != null)

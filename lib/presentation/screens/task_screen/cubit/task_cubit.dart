@@ -5,6 +5,8 @@ import 'package:task_manager/data/repositories/user_rep.dart';
 import 'package:task_manager/domain/entities/full_task.dart';
 import 'package:task_manager/domain/entities/task.dart';
 import 'package:task_manager/domain/entities/user.dart';
+import 'package:task_manager/domain/interfaces/usecase/task_use_case_interface.dart';
+import 'package:task_manager/domain/interfaces/usecase/user_use_case_interface.dart';
 import 'package:task_manager/domain/use_cases/task_use_case.dart';
 import 'package:task_manager/domain/use_cases/user_use_case.dart';
 
@@ -33,8 +35,8 @@ class FailState extends TaskState{
 }
 
 class TaskCubit extends Cubit<TaskState>{
-  final TaskUseCase _taskUseCase;
-  final UserUseCase _userUseCase;
+  final TaskUseCaseInterface _taskUseCase;
+  final UserUseCaseInterface _userUseCase;
   final FullTask? fullTask;
 
   TaskCubit(this._taskUseCase, this._userUseCase, this.fullTask) : super(StartState(Status.ToDo));

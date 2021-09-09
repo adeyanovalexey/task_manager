@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/domain/entities/full_task.dart';
+import 'package:task_manager/domain/interfaces/usecase/full_task_use_case_interface.dart';
+import 'package:task_manager/domain/interfaces/usecase/user_use_case_interface.dart';
 import 'package:task_manager/domain/use_cases/full_task_use_case.dart';
 import 'package:task_manager/domain/use_cases/user_use_case.dart';
 import 'package:task_manager/presentation/screens/app_cubit.dart';
@@ -30,11 +32,11 @@ class MainScreen extends  StatelessWidget{
       return DefaultTabController(
           length: 4,
           child: BlocProvider<HomeCubit>(create: (context) =>
-              HomeCubit(BlocProvider.of<AppCubit>(context).dependencyManager.get<FullTaskUseCase>()),
+              HomeCubit(BlocProvider.of<AppCubit>(context).dependencyManager.get<FullTaskUseCaseInterface>()),
               child: HomeScreen()));
     else if(state.tabIndex == 1)
       return BlocProvider<ProfileCubit>(create: (context) =>
-          ProfileCubit(BlocProvider.of<AppCubit>(context).dependencyManager.get<UserUseCase>()),
+          ProfileCubit(BlocProvider.of<AppCubit>(context).dependencyManager.get<UserUseCaseInterface>()),
           child: ProfileScreen());
     else
       return Scaffold(

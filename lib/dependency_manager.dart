@@ -4,8 +4,11 @@ import 'package:task_manager/data/repositories/task_rep.dart';
 import 'package:task_manager/data/repositories/user_rep.dart';
 import 'package:task_manager/data/services/auth_service.dart';
 import 'package:task_manager/data/services/firebase_db_service.dart';
-import 'package:task_manager/domain/interfaces/task_repository_interface.dart';
-import 'package:task_manager/domain/interfaces/user_repository_interface.dart';
+import 'package:task_manager/domain/interfaces/repository/task_repository_interface.dart';
+import 'package:task_manager/domain/interfaces/repository/user_repository_interface.dart';
+import 'package:task_manager/domain/interfaces/usecase/full_task_use_case_interface.dart';
+import 'package:task_manager/domain/interfaces/usecase/task_use_case_interface.dart';
+import 'package:task_manager/domain/interfaces/usecase/user_use_case_interface.dart';
 import 'package:task_manager/domain/use_cases/full_task_use_case.dart';
 import 'package:task_manager/domain/use_cases/task_use_case.dart';
 import 'package:task_manager/domain/use_cases/user_use_case.dart';
@@ -39,20 +42,20 @@ class DependencyManager{
   }
 
   void _registerUseCase(){
-    _injector.registerSingleton<UserUseCase>((){
+    _injector.registerSingleton<UserUseCaseInterface>((){
       UserRepositoryInterface userRepository = _injector.get<UserRepositoryInterface>();
       return UserUseCase(userRepository);
     });
 
-    _injector.registerSingleton<TaskUseCase>((){
+    _injector.registerSingleton<TaskUseCaseInterface>((){
       TaskRepositoryInterface taskRepository = _injector.get<TaskRepositoryInterface>();
       return TaskUseCase(taskRepository);
     });
 
-    _injector.registerSingleton<FullTaskUseCase>((){
-      UserUseCase userUseCase = _injector.get<UserUseCase>();
-      TaskUseCase taskUseCase = _injector.get<TaskUseCase>();
-      return FullTaskUseCase(userUseCase, taskUseCase);
+    _injector.registerSingleton<FullTaskUseCaseInterface>((){
+      UserUseCaseInterface userUseCaseInterface = _injector.get<UserUseCaseInterface>();
+      TaskUseCaseInterface taskUseCaseInterface = _injector.get<TaskUseCaseInterface>();
+      return FullTaskUseCase(userUseCaseInterface, taskUseCaseInterface);
     });
   }
 }
