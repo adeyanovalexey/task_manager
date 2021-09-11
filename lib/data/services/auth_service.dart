@@ -22,6 +22,7 @@ class AuthService{
     try{
       UserCredential userCredential = await _fAuth.createUserWithEmailAndPassword(email: email, password: password);
       UserAuth? userAuth = UserAuth.fromUserAuth(userCredential.user);
+      _user = userCredential.user;
       return userAuth;
     }
     catch(e){

@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/domain/entities/user.dart';
 import 'package:task_manager/domain/interfaces/usecase/user_use_case_interface.dart';
-import 'package:task_manager/domain/use_cases/user_use_case.dart';
 
 abstract class ProfileState extends Equatable{
   ProfileState(this.user);

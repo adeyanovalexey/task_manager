@@ -1,10 +1,8 @@
 import 'package:collection/collection.dart';
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/domain/entities/full_task.dart';
 import 'package:task_manager/domain/entities/task.dart';
 import 'package:task_manager/domain/interfaces/usecase/full_task_use_case_interface.dart';
-import 'package:task_manager/domain/use_cases/full_task_use_case.dart';
 
 abstract class HomeState{
     //extends Equatable{

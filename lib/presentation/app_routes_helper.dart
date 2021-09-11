@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:task_manager/data/repositories/task_rep.dart';
-import 'package:task_manager/data/repositories/user_rep.dart';
 import 'package:task_manager/domain/entities/full_task.dart';
+import 'package:task_manager/domain/interfaces/usecase/full_task_use_case_interface.dart';
 import 'package:task_manager/domain/interfaces/usecase/task_use_case_interface.dart';
 import 'package:task_manager/domain/interfaces/usecase/user_use_case_interface.dart';
-import 'package:task_manager/domain/use_cases/task_use_case.dart';
-import 'package:task_manager/domain/use_cases/user_use_case.dart';
 import 'package:task_manager/presentation/screens/app_cubit.dart';
 import 'package:task_manager/presentation/screens/authorization/cubit/authorization_cubit.dart';
 import 'package:task_manager/presentation/screens/authorization/ui/authorization_screen.dart';
+import 'package:task_manager/presentation/screens/home/cubit/home_cubit.dart';
 import 'package:task_manager/presentation/screens/main/cubit/main_cubit.dart';
 import 'package:task_manager/presentation/screens/main/ui/main_screen.dart';
 import 'package:task_manager/presentation/screens/no_connection/no_connection_screen.dart';
+import 'package:task_manager/presentation/screens/profile/cubit/profile_cubit.dart';
 import 'package:task_manager/presentation/screens/registration/cubit/registration_cubit.dart';
 import 'package:task_manager/presentation/screens/registration/ui/registration_screen.dart';
 import 'package:task_manager/presentation/screens/task_screen/cubit/task_cubit.dart';
@@ -69,8 +68,18 @@ class AppRoutesHelper {
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (context) {
-          return BlocProvider<MainCubit>(
-            create: (context) => MainCubit(routeSettings.arguments != null ? routeSettings.arguments as int : null),
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider<MainCubit>(
+                create: (BuildContext context) => MainCubit(routeSettings.arguments != null ? routeSettings.arguments as int : null),
+              ),
+              BlocProvider<HomeCubit>(
+                create: (BuildContext context) => HomeCubit(BlocProvider.of<AppCubit>(context).dependencyManager.get<FullTaskUseCaseInterface>()),
+              ),
+              BlocProvider<ProfileCubit>(
+                create: (BuildContext context) => ProfileCubit(BlocProvider.of<AppCubit>(context).dependencyManager.get<UserUseCaseInterface>()),
+              ),
+            ],
             child: MainScreen(),
           );
         },
